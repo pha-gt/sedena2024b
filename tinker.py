@@ -3,9 +3,9 @@ from tkinter import ttk                                                         
 
 class Libro:
     def __init__(self, autor,titulo,pais):
-        self.autor = autor;
-        self.titulo = titulo;
-        self.pais = pais;
+        self.autor = autor
+        self.titulo = titulo
+        self.pais = pais
 
 
 class InterfazG:
@@ -15,6 +15,9 @@ class InterfazG:
         self.campo_autor = StringVar()
         self.campo_titulo = StringVar()
         self.campo_pais = StringVar()
+        self.genero = StringVar()
+        
+    
 
 
         raiz.title("Libros")
@@ -29,8 +32,15 @@ class InterfazG:
         ttk.Label(mainframe, text="Pais").grid(column=0, row=2, sticky=W)
         txtPais = ttk.Entry (mainframe, width=7)
         txtPais.grid(column=1,row=2, sticky=(W,E))
-        ttk.Button(mainframe, text="Registrar", command=self.registrar).grid(column=0, row=3, sticky=(W,E), columnspan=2)
+        ttk.Label(mainframe, text="Genero").grid(column=0, row=3, sticky=W)
+        cbGenero = ttk.Combobox(mainframe, values=("Ciencia","Infantil","Fantasia","Terror","Ciencia ficción"), textvariable=self.genero)
+        cbGenero.grid(column=1,row=3)
+        ttk.Label(mainframe, text="Presentacion").grid(column=0, row=3, sticky=W)
+        
+        
 
+        ttk.Button(mainframe, text="Registrar", command=self.registrar).grid(column=0, row=5, sticky=(W,E), columnspan=2)
+        
     def obtener_libro(self):
         return Libro(self.campo_autor.get(), self.campo_autor.get(),self.campo_autor.get())
 
@@ -39,12 +49,17 @@ class InterfazG:
         print(libro.autor)
         self.campo_autor.set("")
 
+#class InterfazTabla:
+#    def __init__(self, raiz):
+        
+
 
 
 
 root = Tk()
 InterfazG(root)
 root.mainloop()
+
 
 
 
