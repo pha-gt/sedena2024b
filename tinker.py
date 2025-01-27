@@ -15,9 +15,8 @@ class InterfazG:
         self.campo_autor = StringVar()
         self.campo_titulo = StringVar()
         self.campo_pais = StringVar()
-        self.genero = StringVar()
-        
-    
+        self.campo_genero = StringVar()
+        self.campo_presentacion = BooleanVar()
 
 
         raiz.title("Libros")
@@ -33,12 +32,11 @@ class InterfazG:
         txtPais = ttk.Entry (mainframe, width=7)
         txtPais.grid(column=1,row=2, sticky=(W,E))
         ttk.Label(mainframe, text="Genero").grid(column=0, row=3, sticky=W)
-        cbGenero = ttk.Combobox(mainframe, values=("Ciencia","Infantil","Fantasia","Terror","Ciencia ficción"), textvariable=self.genero)
+        cbGenero = ttk.Combobox(mainframe, values=("Ciencia","Infantil","Fantasia","Terror","Ciencia ficción"), textvariable=self.campo_genero)
         cbGenero.grid(column=1,row=3)
-        ttk.Label(mainframe, text="Presentacion").grid(column=0, row=3, sticky=W)
-        
-        
-
+        ttk.Label(mainframe, text="Presentacion").grid(column=0, row=4, sticky=W)
+        chPresentacion = ttk.Checkbutton(mainframe,text="Opción",variable=self.campo_presentacion)
+        chPresentacion.grid(column=1,row=4)
         ttk.Button(mainframe, text="Registrar", command=self.registrar).grid(column=0, row=5, sticky=(W,E), columnspan=2)
         
     def obtener_libro(self):
@@ -46,14 +44,11 @@ class InterfazG:
 
     def registrar(self):
         libro = self.obtener_libro()
+        print("valor:"+self.campo_presentacion.get() )
         print(libro.autor)
+
         self.campo_autor.set("")
-
-#class InterfazTabla:
-#    def __init__(self, raiz):
         
-
-
 
 
 root = Tk()
