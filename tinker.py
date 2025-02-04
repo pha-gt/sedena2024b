@@ -11,10 +11,10 @@ class Libro:
         self.presentacion = presentacion                        #arreglo string digita / Fisico
         self.disponibilidad = disponibilidad                    #Disponible y agotado
 
-
+#Iniciar el Tkinter en una variable root
 root = Tk() 
 
-
+#Variables de campo
 campo_autor = StringVar()                                   #StringVar para un autor
 campo_titulo = StringVar()                                  #StringVar para un titulo
 campo_pais = StringVar()                                    #StringVar para pais
@@ -23,9 +23,10 @@ campo_presentacion_fisico = BooleanVar()                    #BooleanVar TRUE / F
 campo_presentacion_digital = BooleanVar()                   #BooleanVar TRUE / FALSE
 campo_disponibilidad = StringVar()                          #StringVar Disponibilidad                              
 
+#Variable de lista de libros registrados
 lista_libros =[]
 
-
+#Ventana de registro
 def  InterfazG(raiz):   
     #titulo de la ventana                                      
     raiz.title("Libros")                                        
@@ -72,25 +73,30 @@ def  InterfazG(raiz):
     ttk.Button(mainframe, text="Ver Tabla", command=verTabla).grid(column=0, row=11, sticky=(W,E), columnspan=2)
     
     
+#Convertir los datos registrados a un Objeto Libro
 def obtener_libro():
+    #Convertir a lista las presentaciones
     lista_presentaciones = []
     if(campo_presentacion_fisico.get()):
         lista_presentaciones.append("fisico")
     if(campo_presentacion_digital.get()):
         lista_presentaciones.append("digital")
 
+    #Crear el libros con las variables asiciadas 
     return Libro(campo_autor.get(),
         campo_titulo.get(),
         campo_pais.get(),
         campo_genero.get(),
         lista_presentaciones,
         campo_disponibilidad.get())
-
+        
+#Registrar en la lista 
 def registrar():
     libro = obtener_libro()
     lista_libros.append(libro)
     print("libro agregado")
-    
+
+#limpiar la ventana
 def limpiar():
     campo_autor.set("")
     campo_titulo.set("")
@@ -99,15 +105,13 @@ def limpiar():
     campo_disponibilidad.set("")
     campo_presentacion_fisico.set(FALSE)
     campo_presentacion_digital.set(FALSE)
-    
-def verTabla():
-    nuevaVentana =Toplevel()
-    InterfazTabla(nuevaVentana)
-    
-def verRegistro():
-    InterfazG(root)
-    
 
+#Rutina del botor ver tabla
+def verTabla():
+    nuevaVentana =Toplevel()                                            #Crear una nueva ventana
+    InterfazTabla(nuevaVentana)
+
+#Ventana de tabla
 def InterfazTabla(raiz):
 
     raiz.title("Tabla Libros")                                              
@@ -130,16 +134,12 @@ def InterfazTabla(raiz):
         tabla.insert('','end', values=(libro.autor,libro.pais, libro.genero, cadena_presentacion,libro.disponibilidad))                             
     tabla.grid(column=0, row = 0)                                                          
     
-
-
-
-
-
+#Invocar la Interfaz grafica de registro
 InterfazG(root)
+#iniciar el comonenten root
 root.mainloop()
 
 
-#root = Tk()
 
 
 
