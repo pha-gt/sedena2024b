@@ -1,5 +1,153 @@
 from tkinter import *                                           #importar componentes
 from tkinter import ttk                                         #importar como ttk
+
+
+class Libro:
+    def __init__(self, autor,titulo,pais,genero, presentacion, disponibilidad):
+        self.autor = autor                                      #string para un autor
+        self.titulo = titulo                                    #string para un titulo
+        self.pais = pais                                        #string para un pais
+        self.genero = genero                                    #string para un genero literario
+        self.presentacion = presentacion                        #arreglo string digita / Fisico
+        self.disponibilidad = disponibilidad                    #Disponible y agotado
+
+
+root = Tk() 
+
+
+campo_autor = StringVar()                                   #StringVar para un autor
+campo_titulo = StringVar()                                  #StringVar para un titulo
+campo_pais = StringVar()                                    #StringVar para pais
+campo_genero = StringVar()                                  #StringVar para genero
+campo_presentacion_fisico = BooleanVar()                    #BooleanVar TRUE / FALSE
+campo_presentacion_digital = BooleanVar()                   #BooleanVar TRUE / FALSE
+campo_disponibilidad = StringVar()                          #StringVar Disponibilidad                              
+
+lista_libros =[]
+
+
+def  InterfazG(raiz):   
+    #titulo de la ventana                                      
+    raiz.title("Libros")                                        
+    mainframe = ttk.Frame(raiz, padding="3 3 12 12")                    #Panel principal espacion T-B:3 R-L:12
+    mainframe.grid(column=0, row= 0, sticky= (N,W,E,S))
+
+    #Etiqueta e input Autor
+    ttk.Label(mainframe, text= "Autor").grid(column=0,row=0, sticky=W)
+    txAutor = ttk.Entry (mainframe, width=7, textvariable=campo_autor)                            
+    txAutor.grid(column=1,row=0, sticky=(W,E))
+     
+     #Etiqueta e input Titulo
+    ttk.Label(mainframe, text= "Titulo").grid(column=0, row=1, sticky=W)
+    txtTitulo = ttk.Entry (mainframe, width=7, textvariable=campo_titulo)
+    txtTitulo.grid(column=1,row=1, sticky=(W,E))
+    
+    #Etiqueta e input Pais
+    ttk.Label(mainframe, text="Pais").grid(column=0, row=2, sticky=W)
+    txtPais = ttk.Entry (mainframe, width=7,textvariable=campo_pais)
+    txtPais.grid(column=1,row=2, sticky=(W,E))
+    
+    #Etiqueta y combobox Genero                                         
+    ttk.Label(mainframe, text="Genero").grid(column=0, row=3, sticky=W)
+    #parametro values contiene opciones a mostrar
+    cbGenero = ttk.Combobox(mainframe, values=["Ciencia","Infantil","Fantasia","Terror","Ciencia ficción"], textvariable=campo_genero)
+    cbGenero.grid(column=1,row=3)
+    
+    #Etiqueta y checkbox Presentacion  
+    ttk.Label(mainframe, text="Presentacion").grid(column=0, row=4, sticky=W)
+    chPresentacion_fisico = ttk.Checkbutton(mainframe,text="Físico",variable=campo_presentacion_fisico)
+    chPresentacion_fisico.grid(column=1,row=4,sticky=W)
+    chPresentacion_digital = ttk.Checkbutton(mainframe,text="Digital",variable=campo_presentacion_digital)
+    chPresentacion_digital.grid(column=1,row=5,sticky=W)
+    
+    #Etiqueta y combobox Genero
+    ttk.Label(mainframe, text="Disponibilidad").grid(column=0, row=6, sticky=W)
+    rDisp_disponible = ttk.Radiobutton(mainframe, text='Disponible', variable=campo_disponibilidad, value='disponible')
+    rDisp_disponible.grid(column=1,row = 7, sticky=W)
+    rDisp_disponible = ttk.Radiobutton(mainframe, text='Agotado', variable=campo_disponibilidad, value='agotado')
+    rDisp_disponible.grid(column=1,row = 8, sticky=W)
+    
+    ttk.Button(mainframe, text="Registrar", command=registrar).grid(column=0, row=9, sticky=(W,E), columnspan=2)
+    ttk.Button(mainframe, text="limpiar", command=limpiar).grid(column=0, row=10, sticky=(W,E), columnspan=2)
+    ttk.Button(mainframe, text="Ver Tabla", command=verTabla).grid(column=0, row=11, sticky=(W,E), columnspan=2)
+    
+    
+def obtener_libro():
+    lista_presentaciones = []
+    if(campo_presentacion_fisico.get()):
+        lista_presentaciones.append("fisico")
+    if(campo_presentacion_digital.get()):
+        lista_presentaciones.append("digital")
+
+    return Libro(campo_autor.get(),
+        campo_titulo.get(),
+        campo_pais.get(),
+        campo_genero.get(),
+        lista_presentaciones,
+        campo_disponibilidad.get())
+
+def registrar():
+    libro = obtener_libro()
+    lista_libros.append(libro)
+    print("libro agregado")
+    
+def limpiar():
+    campo_autor.set("")
+    campo_titulo.set("")
+    campo_pais.set("")
+    campo_genero.set("")
+    campo_disponibilidad.set("")
+    campo_presentacion_fisico.set(FALSE)
+    campo_presentacion_digital.set(FALSE)
+    
+def verTabla():
+    nuevaVentana =Toplevel()
+    InterfazTabla(nuevaVentana)
+    
+def verRegistro():
+    InterfazG(root)
+    
+
+def InterfazTabla(raiz):
+
+    raiz.title("Tabla Libros")                                              
+    mainframe = ttk.Frame(raiz, padding="3 3 12 12")                    #Panel principal espacion T-B:3 R-L:12
+    mainframe.grid(column=0, row= 0, sticky= (N,W,E,S)) 
+    tabla = ttk.Treeview(mainframe, columns=('autor','pais','genero', 'pres','disp'), show='headings')  #componente padre y columnas
+    #Nombrando cada cabecera
+    tabla.heading('autor', text ="Autor")                                                
+    tabla.heading('pais', text ="Pais")                                                  
+    tabla.heading('genero', text ="Genero")    
+    tabla.heading('pres', text ="Presentación")  
+    tabla.heading('disp', text ="Disposición")                                              
+    # insertar datos 
+    for libro in lista_libros:
+        #unir las opciones de presentacion en una linea
+        cadena_presentacion = ""
+        for opcion in libro.presentacion:
+            cadena_presentacion= cadena_presentacion+" "+opcion
+        #insertar    
+        tabla.insert('','end', values=(libro.autor,libro.pais, libro.genero, cadena_presentacion,libro.disponibilidad))                             
+    tabla.grid(column=0, row = 0)                                                          
+    
+
+
+
+
+
+InterfazG(root)
+root.mainloop()
+
+
+#root = Tk()
+
+
+
+
+
+'''OBJETOS
+from tkinter import *                                           #importar componentes
+from tkinter import ttk                                         #importar como ttk
                                                                 #Clase libro 
 class Libro:
     def __init__(self, autor,titulo,pais,
@@ -84,7 +232,7 @@ class InterfazG:
 root = Tk()
 InterfazG(root)
 root.mainloop()
-
+'''
 
 
 
